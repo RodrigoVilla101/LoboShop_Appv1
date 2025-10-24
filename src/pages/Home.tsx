@@ -1,22 +1,99 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import React from 'react';
+import {
+  IonContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonButton,
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
+} from '@ionic/react';
+import { personCircleOutline, logOutOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Home: React.FC = () => {
+  const history = useHistory();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    history.push('/login');
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>LoboShop - Inicio</IonTitle>
+          <IonButton slot="end" onClick={handleLogout} fill="clear">
+            <IonIcon icon={logOutOutline} />
+            Salir
+          </IonButton>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
+
+      <IonContent className="ion-padding">
+        <IonGrid>
+          <IonRow className="ion-justify-content-center">
+            <IonCol size="12" sizeMd="8">
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>¡Bienvenido, {user?.nombre}!</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <div className="ion-text-center ion-padding">
+                    <IonIcon
+                      icon={personCircleOutline}
+                      style={{ fontSize: '80px', color: 'var(--ion-color-primary)' }}
+                    />
+                    <h2>{user?.nombre}</h2>
+                    <p>{user?.email}</p>
+                    {user?.telefono && <p>📱 {user.telefono}</p>}
+                    <p>
+                      <strong>Rol:</strong> {user?.rol}
+                    </p>
+                  </div>
+
+                  <IonButton
+                    expand="block"
+                    onClick={() => history.push('/profile')}
+                  >
+                    Ver Mi Perfil
+                  </IonButton>
+                </IonCardContent>
+              </IonCard>
+
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>🎉 Sprint 1 Completado</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <p>
+                    El sistema de autenticación está funcionando correctamente:
+                  </p>
+                  <ul>
+                    <li>✅ Registro de usuarios</li>
+                    <li>✅ Inicio de sesión</li>
+                    <li>✅ Protección de rutas</li>
+                    <li>✅ Persistencia de sesión</li>
+                    <li>✅ Gestión de tokens JWT</li>
+                  </ul>
+                  <p className="ion-margin-top">
+                    <strong>Próximo Sprint:</strong> Catálogo de Productos
+                  </p>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );
