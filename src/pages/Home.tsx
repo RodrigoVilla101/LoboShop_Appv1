@@ -15,7 +15,13 @@ import {
   IonRow,
   IonCol,
 } from '@ionic/react';
-import { personCircleOutline, logOutOutline } from 'ionicons/icons';
+import { 
+  personCircleOutline, 
+  logOutOutline, 
+  storefrontOutline,
+  addCircleOutline,
+  listOutline 
+} from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -66,7 +72,45 @@ const Home: React.FC = () => {
                     expand="block"
                     onClick={() => history.push('/profile')}
                   >
+                    <IonIcon icon={personCircleOutline} slot="start" />
                     Ver Mi Perfil
+                  </IonButton>
+                </IonCardContent>
+              </IonCard>
+
+              {/* Nueva sección de acciones rápidas */}
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>🛒 Acciones Rápidas</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <IonButton
+                    expand="block"
+                    color="primary"
+                    onClick={() => history.push('/productos')}
+                    className="ion-margin-bottom"
+                  >
+                    <IonIcon icon={storefrontOutline} slot="start" />
+                    Ver Catálogo de Productos
+                  </IonButton>
+
+                  <IonButton
+                    expand="block"
+                    color="secondary"
+                    onClick={() => history.push('/mis-productos')}
+                    className="ion-margin-bottom"
+                  >
+                    <IonIcon icon={listOutline} slot="start" />
+                    Mis Productos
+                  </IonButton>
+
+                  <IonButton
+                    expand="block"
+                    color="success"
+                    onClick={() => history.push('/crear-producto')}
+                  >
+                    <IonIcon icon={addCircleOutline} slot="start" />
+                    Vender un Producto
                   </IonButton>
                 </IonCardContent>
               </IonCard>
@@ -87,7 +131,7 @@ const Home: React.FC = () => {
                     <li>✅ Gestión de tokens JWT</li>
                   </ul>
                   <p className="ion-margin-top">
-                    <strong>Próximo Sprint:</strong> Catálogo de Productos
+                    <strong>Sprint 2 en progreso:</strong> Catálogo de Productos
                   </p>
                 </IonCardContent>
               </IonCard>
@@ -100,3 +144,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+

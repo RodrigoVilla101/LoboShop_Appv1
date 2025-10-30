@@ -1,0 +1,30 @@
+.category-filters {
+  padding: 12px;
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  background: var(--ion-color-light);
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-filters::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-filters::-webkit-scrollbar-thumb {
+  background: var(--ion-color-medium);
+  border-radius: 3px;
+}
+
+.category-filters ion-chip {
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.category-filters ion-chip:hover {
+  opacity: 0.8;
+}
+
+

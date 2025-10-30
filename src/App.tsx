@@ -1,9 +1,14 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, IonRouterOutlet, setupIonicReact, IonSpinner } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import CreateProduct from './pages/CreateProduct';
+import ProductDetail from './pages/ProductDetail';
+import MyProducts from './pages/MyProducts';
+import EditProduct from './pages/EditProduct';
+import React from 'react';
 
-/* Core CSS required for Ionic components to work properly */
+/* Core CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
@@ -20,42 +25,73 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
+import Products from './pages/Products';
 
 setupIonicReact();
 
-// Componente para proteger rutas
-const PrivateRoute: React.FC<{ component: React.FC; path: string; exact?: boolean }> = ({
-  component: Component,
-  ...rest
-}) => {
+const AppRoutes: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return (
+      <IonApp>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          flexDirection: 'column'
+        }}>
+          <IonSpinner name="crescent" style={{ transform: 'scale(2)' }} />
+          <p style={{ marginTop: '20px' }}>Cargando...</p>
+        </div>
+      </IonApp>
+    );
   }
-
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
-      }
-    />
-  );
-};
-
-const AppRoutes: React.FC = () => {
-  const { isAuthenticated } = useAuth();
 
   return (
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/register" component={Register} />
-        <PrivateRoute exact path="/home" component={Home} />
-        <PrivateRoute exact path="/profile" component={Profile} />
+        {/* Rutas públicas */}
+        <Route exact path="/login">
+          {isAuthenticated ? <Redirect to="/home" /> : <Login />}
+        </Route>
+        
+        <Route exact path="/register">
+          {isAuthenticated ? <Redirect to="/home" /> : <Register />}
+        </Route>
+
+        {/* Rutas protegidas */}
+        <Route exact path="/home">
+          {isAuthenticated ? <Home /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route exact path="/profile">
+          {isAuthenticated ? <Profile /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route exact path="/productos">
+          {isAuthenticated ? <Products /> : <Redirect to="/login" />}
+        </Route>
+
+        {/* Ruta por defecto */}
         <Route exact path="/">
-          <Redirect to={isAuthenticated ? '/home' : '/login'} />
+          <Redirect to={isAuthenticated ? '/productos' : '/login'} />
+        </Route>
+
+        <Route exact path="/crear-producto">
+          {isAuthenticated ? <CreateProduct /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route exact path="/producto/:id">
+          {isAuthenticated ? <ProductDetail /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route exact path="/mis-productos">
+          {isAuthenticated ? <MyProducts /> : <Redirect to="/login" />}
+        </Route>
+        <Route exact path="/editar-producto/:id">
+          {isAuthenticated ? <EditProduct /> : <Redirect to="/login" />}
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
@@ -71,4 +107,5 @@ const App: React.FC = () => (
 );
 
 export default App;
+
 
