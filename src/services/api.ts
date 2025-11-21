@@ -4,6 +4,8 @@ import { Product, ProductFilters, ProductsResponse, Category } from '../types/pr
 
 // Configuración base de axios
 const api = axios.create({
+  // ANTES (para móvil):
+  // baseURL: 'http://192.168.1.4:3000/api/v1',
   baseURL: 'http://localhost:3000/api/v1',
   timeout: 30000, // 30 segundos para permitir carga de imágenes
   headers: {

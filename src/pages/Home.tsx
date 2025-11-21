@@ -113,28 +113,7 @@ const Home: React.FC = () => {
                     Vender un Producto
                   </IonButton>
                 </IonCardContent>
-              </IonCard>
-
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>🎉 Sprint 1 Completado</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <p>
-                    El sistema de autenticación está funcionando correctamente:
-                  </p>
-                  <ul>
-                    <li>✅ Registro de usuarios</li>
-                    <li>✅ Inicio de sesión</li>
-                    <li>✅ Protección de rutas</li>
-                    <li>✅ Persistencia de sesión</li>
-                    <li>✅ Gestión de tokens JWT</li>
-                  </ul>
-                  <p className="ion-margin-top">
-                    <strong>Sprint 2 en progreso:</strong> Catálogo de Productos
-                  </p>
-                </IonCardContent>
-              </IonCard>
+              </IonCard>        
             </IonCol>
           </IonRow>
         </IonGrid>
