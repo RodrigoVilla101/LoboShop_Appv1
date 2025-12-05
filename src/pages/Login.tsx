@@ -70,20 +70,9 @@ const Login: React.FC = () => {
       });
       setTimeout(() => history.push('/home'), 1000);
     } catch (error: any) {
-      const errorDetails = {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-        config: {
-          url: error.config?.url,
-          method: error.config?.method
-        }
-      };
-      alert(JSON.stringify(errorDetails, null, 2));
-
       setToast({
         show: true,
-        message: 'Error: Ver alerta',
+        message: error.message || 'Error al iniciar sesión',
         color: 'danger',
       });
     } finally {
@@ -151,11 +140,6 @@ const Login: React.FC = () => {
                     </div>
                   </IonCardContent>
                 </IonCard>
-
-                {/* DEBUG INFO */}
-                <div style={{ marginTop: '20px', color: 'gray', fontSize: '10px', textAlign: 'center' }}>
-                  API: {import.meta.env.VITE_API_URL}
-                </div>
               </div>
             </IonCol>
           </IonRow>

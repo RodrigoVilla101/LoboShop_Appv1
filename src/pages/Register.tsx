@@ -93,20 +93,11 @@ const Register: React.FC = () => {
 
     setLoading(true);
     try {
-      // DEBUG: Usar authService directamente para ver el error crudo del backend
-      // await register({ ... }); 
-      const response = await import('../services/api').then(m => m.authService.register({
+      await register({
         nombre: formData.nombre,
         email: formData.email,
         password: formData.password,
         telefono: formData.telefono,
-      }));
-
-      // Si llegamos aquí, fue exitoso (authService devuelve data, no response completo)
-      setToast({
-        show: true,
-        message: '¡Registro exitoso! (Debug Mode)',
-        color: 'success',
       });
       setToast({
         show: true,
@@ -115,20 +106,9 @@ const Register: React.FC = () => {
       });
       setTimeout(() => history.push('/home'), 1000);
     } catch (error: any) {
-      const errorDetails = {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-        config: {
-          url: error.config?.url,
-          method: error.config?.method
-        }
-      };
-      alert(JSON.stringify(errorDetails, null, 2));
-
       setToast({
         show: true,
-        message: 'Error: Ver alerta',
+        message: error.message || 'Error al registrarse',
         color: 'danger',
       });
     } finally {
