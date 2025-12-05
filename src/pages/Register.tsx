@@ -106,9 +106,20 @@ const Register: React.FC = () => {
       });
       setTimeout(() => history.push('/home'), 1000);
     } catch (error: any) {
+      const errorDetails = {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method
+        }
+      };
+      alert(JSON.stringify(errorDetails, null, 2));
+
       setToast({
         show: true,
-        message: error.message || 'Error al registrarse',
+        message: 'Error: Ver alerta',
         color: 'danger',
       });
     } finally {
