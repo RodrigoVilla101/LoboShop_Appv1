@@ -88,7 +88,7 @@ const Login: React.FC = () => {
             <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
               <div className="login-container">
                 <div className="logo-container">
-                  <h1>🐺 LoboShop</h1>
+                  <h1>LoboShop</h1>
                   <p>Tu tienda online de confianza</p>
                 </div>
 
