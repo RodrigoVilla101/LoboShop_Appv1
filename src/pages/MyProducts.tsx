@@ -149,7 +149,7 @@ const MyProducts: React.FC = () => {
                       <IonCard className="my-product-card">
                         {product.imagenes && product.imagenes.length > 0 ? (
                           <img
-                            src={`http://localhost:3000${product.imagenes[0].url}`}
+                            src={`${import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3000'}${product.imagenes[0].url}`}
                             alt={product.nombre}
                             style={{
                               height: '200px',
@@ -157,6 +157,10 @@ const MyProducts: React.FC = () => {
                               width: '100%',
                             }}
                             onClick={() => history.push(`/producto/${product._id}`)}
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              e.currentTarget.parentElement?.querySelector('.no-image')?.classList.remove('hidden');
+                            }}
                           />
                         ) : (
                           <div

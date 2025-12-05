@@ -191,11 +191,15 @@ const ProductDetail: React.FC = () => {
         {product.imagenes && product.imagenes.length > 0 ? (
           <div className="image-gallery">
             <img
-              src={`http://localhost:3000${product.imagenes[currentImageIndex].url}`}
+              src={`${import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3000'}${product.imagenes[currentImageIndex].url}`}
               alt={`${product.nombre} ${currentImageIndex + 1}`}
               className="product-detail-image"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                // Could show a placeholder here
+              }}
             />
-            
+
             {product.imagenes.length > 1 && (
               <>
                 <IonButton
@@ -205,7 +209,7 @@ const ProductDetail: React.FC = () => {
                 >
                   <IonIcon icon={chevronBackOutline} />
                 </IonButton>
-                
+
                 <IonButton
                   className="nav-button next-button"
                   fill="clear"

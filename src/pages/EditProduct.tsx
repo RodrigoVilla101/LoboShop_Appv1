@@ -40,7 +40,7 @@ interface EditProductParams {
 const EditProduct: React.FC = () => {
   const { id } = useParams<EditProductParams>();
   const history = useHistory();
-  
+
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
@@ -72,14 +72,14 @@ const EditProduct: React.FC = () => {
   const loadData = async () => {
     try {
       setLoadingData(true);
-      
+
       // Cargar categorías
       const cats = await categoryService.getAll();
       setCategories(cats);
 
       // Cargar producto
       const product = await productService.getById(id);
-      
+
       setFormData({
         nombre: product.nombre,
         descripcion: product.descripcion,
@@ -106,7 +106,7 @@ const EditProduct: React.FC = () => {
 
   const handleNewImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    
+
     const totalImages = existingImages.length + newImages.length + files.length;
     if (totalImages > 5) {
       setToast({
@@ -216,7 +216,7 @@ const EditProduct: React.FC = () => {
       formDataToSend.append('precio', formData.precio);
       formDataToSend.append('categoria', formData.categoria);
       formDataToSend.append('estado', formData.estado);
-      
+
       const contacto = {
         telefono: formData.telefono,
         whatsapp: formData.whatsapp,
@@ -407,7 +407,7 @@ const EditProduct: React.FC = () => {
                       <IonCol size="6" sizeMd="4" key={img._id}>
                         <div className="image-preview-container">
                           <IonImg
-                            src={`http://localhost:3000${img.url}`}
+                            src={`${import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3000'}${img.url}`}
                             alt="Producto"
                             className="image-preview"
                           />
