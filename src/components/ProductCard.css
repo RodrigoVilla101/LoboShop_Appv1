@@ -50,21 +50,6 @@
   font-weight: bold;
   color: var(--ion-color-primary);
   margin-top: 5px;
-}
-
-.product-card .description {
-  font-size: 0.9rem;
-  color: var(--ion-color-medium);
-  margin-bottom: 10px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.product-meta {
-  display: flex;
-  gap: 5px;
   margin-bottom: 10px;
   flex-wrap: wrap;
 }
@@ -78,4 +63,17 @@
   font-size: 0.85rem;
   color: var(--ion-color-medium);
   margin-top: 10px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.seller-info {
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
 }

@@ -20,6 +20,9 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const history = useHistory();
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+  // Base URL for images (usually root of backend, not api/v1)
+  const baseUrl = apiUrl.replace('/api/v1', '');
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-MX', {
@@ -46,13 +49,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <IonCard className="product-card" onClick={handleClick}>
+    <IonCard className="product-card" button onClick={handleClick}>
       <div className="product-image-container">
         {product.imagenes && product.imagenes.length > 0 ? (
           <img
-            src={`http://localhost:3000${product.imagenes[0].url}`}
+            src={`${baseUrl}${product.imagenes[0].url}`}
             alt={product.nombre}
             className="product-image"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+            }}
           />
         ) : (
           <div className="product-no-image">
@@ -60,6 +67,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <p>Sin imagen</p>
           </div>
         )}
+        {/* Fallback for broken images */}
+        <div className="product-no-image hidden">
+          <IonIcon icon={imageOutline} style={{ fontSize: '64px' }} />
+          <p>Sin imagen</p>
+        </div>
+
         <IonBadge color={getEstadoBadgeColor(product.estado)} className="estado-badge">
           {product.estado.replace('_', ' ')}
         </IonBadge>
@@ -73,16 +86,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <IonCardContent>
         <p className="description">{product.descripcion}</p>
         <div className="product-meta">
-          <IonChip>
-            <IonIcon icon={product.categoria.icono} />
-            <span>{product.categoria.nombre}</span>
-          </IonChip>
-          <IonChip>
-            <IonIcon icon={eyeOutline} />
-            <span>{product.vistas} vistas</span>
+          <IonChip outline color="primary">
+            <IonIcon icon={product.categoria?.icono || imageOutline} />
+            <IonBadge color="light">{product.categoria?.nombre || 'General'}</IonBadge>
           </IonChip>
         </div>
-        <p className="seller">Vendedor: {product.vendedor.nombre}</p>
+        <div className="seller-info">
+          <IonIcon icon={eyeOutline} /> {product.vistas} vistas
+        </div>
       </IonCardContent>
     </IonCard>
   );

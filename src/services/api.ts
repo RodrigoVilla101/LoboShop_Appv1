@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { LoginCredentials, RegisterData, AuthResponse } from '../types/auth.types';
 import { Product, ProductFilters, ProductsResponse, Category } from '../types/product.types';
+import { storageService } from './storage';
 
 // Configuración base de axios
+// Configuración base de axios
 const api = axios.create({
-  // ANTES (para móvil):
-  // baseURL: 'http://192.168.1.4:3000/api/v1',
-  baseURL: 'http://localhost:3000/api/v1',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
   timeout: 30000, // 30 segundos para permitir carga de imágenes
   headers: {
     'Content-Type': 'application/json',
@@ -15,14 +15,31 @@ const api = axios.create({
 
 // Interceptor para agregar token
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    try {
+      const token = await storageService.get('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error('Error getting token from storage:', error);
     }
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Interceptor para manejo de errores global
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expirado o inválido
+      // TODO: Implementar logout automático o refresh token
+      console.warn('Sesión expirada o no autorizada');
+    }
     return Promise.reject(error);
   }
 );

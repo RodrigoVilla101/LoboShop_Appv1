@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, LoginCredentials, RegisterData, AuthContextType } from '../types/auth.types';
 import { authService } from '../services/api';
+import { storageService } from '../services/storage';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -16,21 +17,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Cargar datos del usuario al iniciar la app
   useEffect(() => {
     const initAuth = async () => {
-      const storedToken = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
+      try {
+        const storedToken = await storageService.get('token');
+        const storedUser = await storageService.get('user');
 
-      if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-        
-        // Verificar si el token sigue siendo válido
-        const isValid = await authService.verifyToken();
-        if (!isValid) {
-          // Token inválido, limpiar datos
-          logout();
+        if (storedToken && storedUser) {
+          // Verificar si el token sigue siendo válido
+          const isValid = await authService.verifyToken(); // Esto podría fallar si el token es inválido, pero el interceptor lo manejará o el catch aquí
+
+          if (isValid) {
+            setToken(storedToken);
+            setUser(typeof storedUser === 'string' ? JSON.parse(storedUser) : storedUser);
+          } else {
+            await logout();
+          }
         }
+      } catch (error) {
+        console.error('Error inicializando auth:', error);
+        await logout();
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     initAuth();
@@ -40,12 +47,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (credentials: LoginCredentials) => {
     try {
       const response = await authService.login(credentials);
-      
+
       if (response.success && response.token && response.usuario) {
-        // Guardar en localStorage
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.usuario));
-        
+        // Guardar en Storage
+        await storageService.set('token', response.token);
+        await storageService.set('user', response.usuario);
+
         // Actualizar estado
         setToken(response.token);
         setUser(response.usuario);
@@ -61,12 +68,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (data: RegisterData) => {
     try {
       const response = await authService.register(data);
-      
+
       if (response.success && response.token && response.usuario) {
-        // Guardar en localStorage
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.usuario));
-        
+        // Guardar en Storage
+        await storageService.set('token', response.token);
+        await storageService.set('user', response.usuario);
+
         // Actualizar estado
         setToken(response.token);
         setUser(response.usuario);
@@ -79,9 +86,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   // Logout
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  const logout = async () => {
+    await storageService.remove('token');
+    await storageService.remove('user');
     setToken(null);
     setUser(null);
   };

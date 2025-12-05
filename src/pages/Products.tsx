@@ -29,6 +29,9 @@ import {
 import { useHistory } from 'react-router-dom';
 import { productService, categoryService } from '../services/api';
 import { Product, Category } from '../types/product.types';
+import LoadingState from '../components/LoadingState';
+import ErrorState from '../components/ErrorState';
+import ProductCard from '../components/ProductCard';
 import './Products.css';
 
 const Products: React.FC = () => {
@@ -61,7 +64,7 @@ const Products: React.FC = () => {
       const response = await productService.getAll({ page: 1, limit: 20 });
       console.log('✅ Productos cargados:', response);
       console.log('📊 Total de productos:', response.count);
-      
+
       if (response.productos && Array.isArray(response.productos)) {
         setProducts(response.productos);
         console.log('✅ Productos guardados en estado:', response.productos.length);
@@ -143,36 +146,15 @@ const Products: React.FC = () => {
 
       <IonContent className="ion-padding">
         {/* Mostrar loading */}
-        {loading && (
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column',
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            height: '400px',
-            background: 'white',
-            borderRadius: '8px',
-            margin: '20px'
-          }}>
-            <IonSpinner name="crescent" style={{ transform: 'scale(1.5)' }} />
-            <p style={{ marginTop: '20px' }}>Cargando productos...</p>
-          </div>
-        )}
+        {loading && <LoadingState message="Cargando productos..." />}
 
         {/* Mostrar error */}
         {!loading && error && (
-          <IonCard color="danger">
-            <IonCardContent>
-              <div style={{ textAlign: 'center' }}>
-                <IonIcon icon={alertCircleOutline} style={{ fontSize: '48px' }} />
-                <h2>Error al cargar productos</h2>
-                <p>{error}</p>
-                <IonButton onClick={loadInitialData} color="light">
-                  Reintentar
-                </IonButton>
-              </div>
-            </IonCardContent>
-          </IonCard>
+          <ErrorState
+            title="Error al cargar productos"
+            message={error}
+            onRetry={loadInitialData}
+          />
         )}
 
         {/* Mostrar contenido cuando NO está cargando y NO hay error */}
@@ -214,89 +196,17 @@ const Products: React.FC = () => {
               </IonCard>
             ) : (
               <>
-                <div style={{ padding: '10px', background: '#f0f0f0', borderRadius: '8px', marginBottom: '10px' }}>
-                  <strong>Mostrando {products.length} productos</strong>
+                <div style={{ padding: '10px', background: 'var(--ion-color-light)', borderRadius: '8px', marginBottom: '10px' }}>
+                  <IonText color="medium">
+                    <strong>Mostrando {products.length} productos</strong>
+                  </IonText>
                 </div>
-                
+
                 <IonGrid>
                   <IonRow>
                     {products.map((product) => (
                       <IonCol size="12" sizeMd="6" sizeLg="4" key={product._id}>
-                        <IonCard 
-                          button 
-                          onClick={() => {
-                            console.log('Click en producto:', product._id);
-                            history.push(`/producto/${product._id}`);
-                          }}
-                          style={{ height: '100%' }}
-                        >
-                          {product.imagenes && product.imagenes.length > 0 ? (
-                            <img
-                              src={`http://localhost:3000${product.imagenes[0].url}`}
-                              alt={product.nombre}
-                              style={{ 
-                                height: '200px', 
-                                objectFit: 'cover', 
-                                width: '100%',
-                                background: '#f5f5f5'
-                              }}
-                              onError={(e) => {
-                                console.error('Error cargando imagen:', product.imagenes[0].url);
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
-                          ) : (
-                            <div style={{
-                              height: '200px',
-                              background: '#f5f5f5',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                              <IonText color="medium">Sin imagen</IonText>
-                            </div>
-                          )}
-                          
-                          <IonCardContent>
-                            <h2 style={{ 
-                              margin: '0 0 10px 0', 
-                              fontSize: '1.2rem',
-                              fontWeight: 'bold'
-                            }}>
-                              {product.nombre}
-                            </h2>
-                            
-                            <p style={{ 
-                              color: 'var(--ion-color-primary)', 
-                              fontSize: '1.4rem', 
-                              fontWeight: 'bold',
-                              margin: '10px 0'
-                            }}>
-                              {formatPrice(product.precio)}
-                            </p>
-                            
-                            <p style={{ 
-                              color: 'var(--ion-color-medium)',
-                              fontSize: '0.9rem',
-                              margin: '10px 0',
-                              lineHeight: '1.4'
-                            }}>
-                              {product.descripcion}
-                            </p>
-                            
-                            <div style={{ 
-                              marginTop: '10px',
-                              paddingTop: '10px',
-                              borderTop: '1px solid #e0e0e0'
-                            }}>
-                              <IonText color="medium">
-                                <small>
-                                  <strong>Vendedor:</strong> {product.vendedor.nombre}
-                                </small>
-                              </IonText>
-                            </div>
-                          </IonCardContent>
-                        </IonCard>
+                        <ProductCard product={product} />
                       </IonCol>
                     ))}
                   </IonRow>
