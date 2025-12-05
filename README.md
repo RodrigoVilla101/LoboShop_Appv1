@@ -75,3 +75,37 @@ Construida con **Ionic**, **React** y **Vite**, esta aplicación ofrece una expe
 * `src/types`: Definiciones de interfaces de TypeScript (ej. `auth.types.ts`, `product.types.ts`).
 * `src/App.tsx`: Componente raíz, define el enrutador principal y las rutas (públicas y privadas).
 * `src/main.tsx`: Punto de entrada de la aplicación React.
+
+## 📦 Despliegue
+
+### Web (PWA)
+Para generar los archivos estáticos optimizados para producción:
+```bash
+npm run build
+```
+La carpeta `dist` generada puede ser desplegada en cualquier hosting estático como Vercel, Netlify, Firebase Hosting, etc.
+
+### Android / iOS
+Sincroniza los cambios con la carpeta nativa:
+```bash
+npm run build
+npx cap sync
+```
+Luego abre el proyecto nativo para compilar:
+```bash
+npx cap open android
+# o
+npx cap open ios
+```
+
+## 🤝 Contribuir
+
+1.  Haz un Fork del proyecto.
+2.  Crea una rama para tu funcionalidad (`git checkout -b feature/AmazingFeature`).
+3.  Haz Commit de tus cambios (`git commit -m 'Add some AmazingFeature'`).
+4.  Haz Push a la rama (`git push origin feature/AmazingFeature`).
+5.  Abre un Pull Request.
+
+## 📄 Licencia
+
+Este proyecto es privado y confidencial. Todos los derechos reservados.
