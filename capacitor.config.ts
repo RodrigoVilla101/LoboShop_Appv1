@@ -4,11 +4,13 @@ const config: CapacitorConfig = {
   appId: 'com.rodrigovillalpando.loboshop',
   appName: 'LoboShop',
   webDir: 'dist',
+  /* 
   server: {
     androidScheme: 'http',
-    url: 'http://192.168.1.3:8100', // URL del servidor de desarrollo (Vite)
-    cleartext: true, // Permitir HTTP
-  },
+    url: 'http://192.168.1.3:8100',
+    cleartext: true,
+  }, 
+  */
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
